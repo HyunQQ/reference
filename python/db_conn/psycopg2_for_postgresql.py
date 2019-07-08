@@ -14,7 +14,7 @@
 # doc : http://initd.org/psycopg/docs/#
 # tutorial : https://pynative.com/python-postgresql-tutorial/
 
-# <Example Code>
+# <Example Select Code>
 import psycopg2
 
 try:
@@ -33,7 +33,29 @@ except(Exception, psycopg2.Error) as error:
     print("Error occure \n",error)
 finally:
     if(connection):
-        # insert의 경우 connection.commit() 해야 db에 적용됨
+        cursor.close()
+        connection.close()
+        print("over")
+
+
+# <Example Insert Code>
+
+try:
+    connection = psycopg2.connect(  user = "<데이터베이스 계정>",
+                                    password = "<비밀번호>",
+                                    host = "<호스트 주소>",
+                                    port = "<사용 포트>",
+                                    database = "<DB 이름>")
+    cursor = connection.cursor()
+    print(connection.get_dsn_parameters(),"\n")
+    sql_str = "INSERT INTO comm_table(user_id, content) VALUES(%s, %s);"
+    cursor.execute(sql_str, ('hyunq','python insert example'))
+    
+except(Exception, psycopg2.Error) as error:
+    print("Error occure \n",error)
+finally:
+    if(connection):
+        connection.commit()  #commit을 하지 않으면 db에 적용 x
         cursor.close()
         connection.close()
         print("over")
