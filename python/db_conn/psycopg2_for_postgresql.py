@@ -33,6 +33,7 @@ except(Exception, psycopg2.Error) as error:
     print("Error occure \n",error)
 finally:
     if(connection):
+        # insert의 경우 connection.commit() 해야 db에 적용됨
         cursor.close()
         connection.close()
         print("over")
