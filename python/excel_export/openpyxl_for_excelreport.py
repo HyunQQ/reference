@@ -17,6 +17,10 @@
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill, Color, GradientFill
 from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.chart import LineChart, Reference
+from openpyxl.chart.axis import DateAxis
+
+from datetime import date
 import pandas as pd
 
 file_nm = "excel-test.xlsx"
@@ -30,7 +34,7 @@ ws_data = wb.create_sheet("Data",1)  # Qsheet2 이름의 시트를 2번째 위�
 
 ######################### Report sheet #########################
 # cell for title 
-ws_report.merge_cells('A1:F1')
+ws_report.merge_cells('A1:D1')
 ws_report['A1'] = 'Report'
 title = ws_report['A1']
 
@@ -43,7 +47,7 @@ title.alignment = Alignment(horizontal='center', vertical='center')
 
 ######################### Data sheet #########################
 # cell for title 
-ws_data.merge_cells('A1:F1')
+ws_data.merge_cells('A1:D1')
 ws_data['A1'] = 'Data'
 title = ws_data['A1']
 
@@ -52,16 +56,42 @@ title.font = Font(name='맑은 고딕', size = 15, bold=True)
 title.alignment = Alignment(horizontal='center', vertical='center')
 
 # cell for dataframe data
-data = pd.DataFrame([[1,2,3],
-            [4,5,6],
-            [7,8,9]])
+data = pd.DataFrame([
+    ['Date', 'Batch 1', 'Batch 2', 'Batch 3'],
+    [date(2015,9, 1), 40, None],
+    [date(2015,9, 2), 40, None],
+    [date(2015,9, 3), 50, None],
+    [date(2015,9, 4), 30, None],
+    [date(2015,9, 5), 35, 35],
+    [date(2015,9, 6), None, 40]])
 
-for r in dataframe_to_rows(data, index=False, header=True):
+for r in dataframe_to_rows(data, index=False, header=False):
     ws_data.append(r)
 
 ###############################################################
 
+######################### Make Line Chart #########################
+line_chart = LineChart()
+line_chart.title = "Line Chart Title"
+line_chart.style = 12
+line_chart.y_axis.title = "Y_title"
+line_chart.x_axis.title = "X_title"
 
+# style for chart   수정 필요 
+style_fst_val = line_chart.series[1]
+style_fst_val.graphicalProperties.line.solidFill = "00AAAA"
+
+style_scd_val = line_chart.series[2]
+style_scd_val.graphicalProperties.line.solidFill = "FF0000"
+
+
+chart_data = Reference(ws_data, min_col=2, min_row=2, max_col=4, max_row=8)
+line_chart.add_data(chart_data, titles_from_data=True)
+
+ws_report.add_chart(line_chart,"A3")
+
+
+###############################################################
 
 ### sheet 삭제 ###
 # wb.remove_sheet(ws)
