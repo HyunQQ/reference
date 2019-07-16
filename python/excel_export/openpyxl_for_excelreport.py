@@ -15,10 +15,9 @@
 
 # <Example Select Code>
 from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment, Border, Side, PatternFill, Color, GradientFill
+from openpyxl.styles import Font, Alignment, Border, Side, PatternFill, Color
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.chart import LineChart, Reference
-from openpyxl.chart.axis import DateAxis
 
 from datetime import date
 import pandas as pd
