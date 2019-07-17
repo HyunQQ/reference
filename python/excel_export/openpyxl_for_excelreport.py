@@ -66,6 +66,7 @@ data = pd.DataFrame([
 # for row in dataframe_to_rows(data, index=False, header=False):
 #     ws_data.append(row)
 
+# 컬럼의 너비를 문자에 길이에 맞게 수정후 입력
 column_widths= []
 for row in dataframe_to_rows(data, index=False, header=False):
     ws_data.append(row)
