@@ -20,6 +20,8 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.chart import LineChart, Reference
 from openpyxl.utils.cell import get_column_letter
 
+from openpyxl.chart.axis import DateAxis
+
 from datetime import date
 import pandas as pd
 
@@ -53,22 +55,25 @@ title.alignment = Alignment(horizontal='center', vertical='center')
 
 # cell for dataframe data
 
-
+header_lst = ['Date', 'Batch 1', 'longgggg111data']
 data = pd.DataFrame([
-    ['Date', 'Batch 1', 'longgggg111data'],
+    
     [date(2015,9, 1), 40, None],
     [date(2015,9, 2), 40, None],
     [date(2015,9, 3), 50, None],
     [date(2015,9, 4), 30, None],
     [date(2015,9, 5), 35, 35],
-    [date(2015,9, 6), None, 40]])
+    [date(2015,9, 6), None, 40]] , columns =header_lst )
+
+print(data)
 
 # for row in dataframe_to_rows(data, index=False, header=False):
 #     ws_data.append(row)
 
 # 컬럼의 너비를 문자에 길이에 맞게 수정후 입력
+# 영어와 숫자의 경우 조절이 맞게 되지만 한글의 경우 제대로 안맞기 때문에 최종 column_width에 추가 값을 곱해서 사용하는 것이 좋다
 column_widths= []
-for row in dataframe_to_rows(data, index=False, header=False):
+for row in dataframe_to_rows(data, index=False, header=True):
     ws_data.append(row)
     for i, cell in enumerate(row):
         cell = str(cell)
@@ -99,10 +104,18 @@ line_chart = LineChart()
 line_chart.title = "Line Chart Title"
 line_chart.style = 12
 line_chart.y_axis.title = "Y_title"
-line_chart.x_axis.title = "X_title"
+line_chart.y_axis.crossAx = 500                     #date 표시를 위해 필요
+line_chart.x_axis = DateAxis(crossAx=100)           #date 표시를 위해 필요
+line_chart.x_axis.number_format = 'YY-mm-dd'        #date 표시를 위해 필요
+line_chart.x_axis.majorTimeUnit = "days"            #date 표시를 위해 필요
+line_chart.x_axis.title = "date"
 
-chart_data = Reference(ws_data, min_col=2, min_row=2, max_col=3, max_row=8)
+chart_data = Reference(ws_data, min_col=2, min_row=1, max_col=3, max_row=8)
 line_chart.add_data(chart_data, titles_from_data=True)
+dates = Reference(ws_data, min_col=1, min_row=2, max_row=8 )    #date 표시를 위해 필요
+line_chart.set_categories(dates)                                #date 표시를 위해 필요
+
+line_chart
 
 # style for chart 
 style_fst_val = line_chart.series[0]
