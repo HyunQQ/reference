@@ -125,13 +125,6 @@ style_scd_val.graphicalProperties.line.solidFill = "FF0000"
 
 ws_report.add_chart(line_chart,"A3")
 
-
-###############################################################
-
-######################### Column width control #########################
-
-# ws.column_dimensions["A"].width = len(string) 
-
 ###############################################################
 
 
