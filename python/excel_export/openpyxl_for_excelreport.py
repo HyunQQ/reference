@@ -18,6 +18,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill, Color
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.chart import LineChart, Reference
+from openpyxl.utils.cell import get_column_letter
 
 from datetime import date
 import pandas as pd
@@ -54,7 +55,7 @@ title.alignment = Alignment(horizontal='center', vertical='center')
 
 
 data = pd.DataFrame([
-    ['Date', 'Batch 1', 'Batch 2'],
+    ['Date', 'Batch 1', 'longgggg111data'],
     [date(2015,9, 1), 40, None],
     [date(2015,9, 2), 40, None],
     [date(2015,9, 3), 50, None],
@@ -62,8 +63,23 @@ data = pd.DataFrame([
     [date(2015,9, 5), 35, 35],
     [date(2015,9, 6), None, 40]])
 
-for r in dataframe_to_rows(data, index=False, header=False):
-    ws_data.append(r)
+# for row in dataframe_to_rows(data, index=False, header=False):
+#     ws_data.append(row)
+
+column_widths= []
+for row in dataframe_to_rows(data, index=False, header=False):
+    ws_data.append(row)
+    for i, cell in enumerate(row):
+        cell = str(cell)
+        if len(column_widths) > i:
+            if len(cell) > column_widths[i]:
+                column_widths[i] = len(cell)
+        else:
+            column_widths += [len(cell)]
+
+for i, column_width in enumerate(column_widths):
+    ws_data.column_dimensions[get_column_letter(i+1)].width = column_width
+
 
 
 # data header color & border
@@ -98,6 +114,13 @@ ws_report.add_chart(line_chart,"A3")
 
 
 ###############################################################
+
+######################### Column width control #########################
+
+# ws.column_dimensions["A"].width = len(string) 
+
+###############################################################
+
 
 ### sheet 삭제 ###
 # wb.remove_sheet()
