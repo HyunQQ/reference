@@ -113,9 +113,8 @@ line_chart.x_axis.title = "date"
 chart_data = Reference(ws_data, min_col=2, min_row=1, max_col=3, max_row=8)
 line_chart.add_data(chart_data, titles_from_data=True)
 dates = Reference(ws_data, min_col=1, min_row=2, max_row=8 )    #date 표시를 위해 필요
-line_chart.set_categories(dates)                                #date 표시를 위해 필요
+line_chart.set_categories(dates)    
 
-line_chart
 
 # style for chart 
 style_fst_val = line_chart.series[0]
